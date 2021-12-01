@@ -5,3 +5,12 @@ In order to reduce compilation-time while still gathering all solutions in the s
 that control's wether the solution is compiled or not. The feature can be enabled by either editing the `default = [day#]` to the desired day in the `Cargo.toml` file or
 specifying the features when building the application: `cargo build --feature day#`. The `all` feature compiles all days.
 
+## Benchmark
+Result of running `cargo run --release --features complete`
+```
+                                   Advent of Code 2021
+Puzzle:       Answer                                                           Time     
+------------------------------------------------------------------------------------------
+day1:part1:   1466                                                                    85us
+day1:part2:   1491                                                                    96us
+```

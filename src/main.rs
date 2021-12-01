@@ -74,7 +74,7 @@ macro_rules! execute_day {
 }
 
 fn main() {
-    println!("{0:^1$}", "Advent of Code 2019", FORMAT_TOTAL_WIDTH);
+    println!("{0:^1$}", "Advent of Code 2021", FORMAT_TOTAL_WIDTH);
     println!("{0:<3$} {1:<4$} {2:<5$}", 
         "Puzzle:", "Answer", "Time",
         FORMAT_PART_WIDTH, FORMAT_ANSWER_WIDTH, FORMAT_TIME_WIDTH

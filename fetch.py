@@ -2,7 +2,7 @@ from sys import argv
 from os import getcwd
 from requests import get
 
-get_url = lambda day: f"https://adventofcode.com/2020/day/{day}/input"
+get_url = lambda day: f"https://adventofcode.com/2021/day/{day}/input"
 destination_dir = ".\\data\\"
 
 if __name__ == "__main__":
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     cookies = {"session": session}
     ret = get(url, cookies=cookies, allow_redirects=True)
     with open(f"{destination_dir}day{day}.txt", "w") as f:
-        f.write(ret.text)
+        f.write(ret.text.strip())
 
     print(f"{url} -> {destination_dir}day{day}.txt")
     for i, l in enumerate(ret.text.splitlines()):
