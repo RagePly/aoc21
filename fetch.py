@@ -1,5 +1,4 @@
 from sys import argv
-from os import getcwd
 from requests import get
 
 get_url = lambda day: f"https://adventofcode.com/2021/day/{day}/input"

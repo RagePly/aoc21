@@ -11,6 +11,8 @@ Result of running `cargo run --release --features complete`
                                    Advent of Code 2021
 Puzzle:       Answer                                                           Time     
 ------------------------------------------------------------------------------------------
-day1:part1:   1466                                                                    85us
-day1:part2:   1491                                                                    96us
+day1:part1:   1466                                                                    95us
+day1:part2:   1491                                                                    66us
+day2:part1:   1507611                                                                462us
+day2:part2:   1880593125                                                             458us
 ```
