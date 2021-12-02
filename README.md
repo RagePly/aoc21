@@ -6,13 +6,13 @@ that control's wether the solution is compiled or not. The feature can be enable
 specifying the features when building the application: `cargo build --feature day#`. The `all` feature compiles all days.
 
 ## Benchmark
-Result of running `cargo run --release --features complete`
+Result of running `cargo run --release --features complete --features benchmark`
 ```
                                    Advent of Code 2021
 Puzzle:       Answer                                                           Time     
 ------------------------------------------------------------------------------------------
-day1:part1:   1466                                                                    95us
-day1:part2:   1491                                                                    66us
-day2:part1:   1507611                                                                462us
-day2:part2:   1880593125                                                             458us
+day1:part1:   1466                                                                 84±22µs
+day1:part2:   1491                                                                 91±25µs
+day2:part1:   1507611                                                             359±51µs
+day2:part2:   1880593125                                                          358±46µs
 ```
