@@ -11,8 +11,10 @@ Result of running `cargo run --release --features complete --features benchmark`
                                    Advent of Code 2021
 Puzzle:       Answer                                                           Time     
 ------------------------------------------------------------------------------------------
-day1:part1:   1466                                                                 84±22µs
-day1:part2:   1491                                                                 91±25µs
-day2:part1:   1507611                                                             359±51µs
-day2:part2:   1880593125                                                          358±46µs
+day1:part1:   1466                                                                 43±11µs
+day1:part2:   1491                                                                 44±15µs
+day2:part1:   1507611                                                             365±53µs
+day2:part2:   1880593125                                                          355±55µs
+day3:part1:   3923414                                                            550±130µs
+day3:part2:   5852595                                                             172±35µs
 ```
