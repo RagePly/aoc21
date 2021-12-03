@@ -18,18 +18,21 @@ use std::collections::HashSet;
 
 #[cfg(feature = "day3")]
 pub fn part1(source: String) -> usize {
-    let numbers: Vec<Vec<usize>> = source.split("\r\n").map(|line| line.chars().map(|c| if c == '0' { 0 } else { 1 } ).collect() ).collect();
+    let mut nr_bits = 0;
+    let numbers: Vec<usize> = source.split("\r\n").map(|line| { nr_bits = line.len(); usize::from_str_radix(line, 2).unwrap() } ).collect();
     let size = numbers.len();
-    let mut bits: Vec<usize> = numbers[0].clone();
-    let nr_bits = bits.len();
-    numbers.into_iter().skip(1).for_each(
-        |num| num.into_iter().enumerate().for_each(|(i, b)| bits[i] += b)
+
+    let mut bit_tally: Vec<usize> = Vec::new();
+    bit_tally.resize(nr_bits, 0);
+
+    numbers.into_iter().for_each(
+        |num| (0..nr_bits).for_each(|i| bit_tally[i] += 0b1 & num >> nr_bits - i - 1)
     );
 
     let mut gamma = 0;
     let mut epsilon = 0;
     
-    bits.into_iter().enumerate().for_each(
+    bit_tally.into_iter().enumerate().for_each(
         |(i, count)| {
             let bit = count * 2 / size;
             let offset = nr_bits - i - 1;
