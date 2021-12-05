@@ -1,6 +1,7 @@
+#[derive(Hash, Eq)]
 pub struct Point<T> {
-    x: T,
-    y: T
+    pub x: T,
+    pub y: T
 }
 
 impl<T> std::ops::Add for Point<T> where T: std::ops::Add {
@@ -8,6 +9,13 @@ impl<T> std::ops::Add for Point<T> where T: std::ops::Add {
 
     fn add(self, other: Self) -> Self::Output {
         point(self.x + other.x, self.y + other.y)
+    }
+}
+
+impl<T> std::ops::AddAssign for Point<T> where T: std::ops::AddAssign {
+    fn add_assign(&mut self, other: Self) {
+        self.x += other.x;
+        self.y += other.y;
     }
 }
 
@@ -39,7 +47,7 @@ pub fn point<T>(x: T, y: T) -> Point<T> {
     }
 }
 
-impl<T> Point<T> where T: Clone + super::num_traits::Signed {
+impl<T> Point<T> where T: Clone + super::num_traits::Signed + std::str::FromStr {
     pub fn manhattan(&self) -> T {
         return self.x.abs() + self.y.abs()
     }
