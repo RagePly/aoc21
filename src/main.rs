@@ -1,5 +1,3 @@
-#![feature(test)]
-
 #[cfg(feature = "benchmark")]
 use std::time::{Instant, Duration};
 
@@ -7,7 +5,7 @@ use std::time::{Instant, Duration};
 use std::time::Instant;
 
 #[cfg(test)]
-mod tests;
+mod tests; // nightly needs to be enabled, add #![feature(test)] to the top of this file
 
 pub mod comp_features;
 pub mod linalg;
