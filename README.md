@@ -5,6 +5,8 @@ In order to reduce compilation-time while still gathering all solutions in the s
 that control's wether the solution is compiled or not. The feature can be enabled by either editing the `default = [day#]` to the desired day in the `Cargo.toml` file or
 specifying the features when building the application: `cargo build --feature day#`. The `all` feature compiles all days.
 
+In order to run test, *nightly* is required.
+
 ## Benchmark
 Result of running `cargo run --release --features complete --features benchmark`
 ```
@@ -25,8 +27,19 @@ day6:part1:   374994                                                            
 day6:part2:   1686252324092                                                       127±23µs
 ```
 
-### Comment on the performance
-Day 6 seems **WAY** to fast for a laptop computer to handle. Mine has a 1.6 GHz processor and with the current performance it would imply that around only 40000 instructions
-were used to solve that part. I've modified my benchmark code to do some dummy calculations in order to hopefully keep the compiler from just optimizing my code away. 
-
-As for the duration this text stands, the above benchmark should be considered invalid.
+### Compared to cargo's unittesting
+Result of running `cargo bench --features complete`
+```
+test tests::day1_part1 ... bench:      41,866 ns/iter (+/- 23,032)
+test tests::day1_part2 ... bench:      47,561 ns/iter (+/- 18,806)
+test tests::day2_part1 ... bench:     344,261 ns/iter (+/- 112,992)
+test tests::day2_part2 ... bench:     366,400 ns/iter (+/- 123,315)
+test tests::day3_part1 ... bench:      44,202 ns/iter (+/- 17,367)
+test tests::day3_part2 ... bench:     188,588 ns/iter (+/- 93,137)
+test tests::day4_part1 ... bench:   1,085,531 ns/iter (+/- 216,061)
+test tests::day4_part2 ... bench:   1,179,340 ns/iter (+/- 274,931)
+test tests::day5_part1 ... bench:   3,579,460 ns/iter (+/- 2,051,551)
+test tests::day5_part2 ... bench:   2,357,892 ns/iter (+/- 805,349)
+test tests::day6_part1 ... bench:      22,836 ns/iter (+/- 9,295)
+test tests::day6_part2 ... bench:     117,184 ns/iter (+/- 46,540)
+```

@@ -1,8 +1,13 @@
+#![feature(test)]
+
 #[cfg(feature = "benchmark")]
 use std::time::{Instant, Duration};
 
 #[cfg(not(feature = "benchmark"))]
 use std::time::Instant;
+
+#[cfg(test)]
+mod tests;
 
 pub mod comp_features;
 pub mod linalg;
