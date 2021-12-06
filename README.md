@@ -28,3 +28,5 @@ day6:part2:   1686252324092                                                     
 ### Comment on the performance
 Day 6 seems **WAY** to fast for a laptop computer to handle. Mine has a 1.6 GHz processor and with the current performance it would imply that around only 40000 instructions
 were used to solve that part. I've modified my benchmark code to do some dummy calculations in order to hopefully keep the compiler from just optimizing my code away. 
+
+As for the duration this text stands, the above benchmark should be considered invalid.

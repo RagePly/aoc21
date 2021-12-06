@@ -1,1 +1,1 @@
-py fetch.py %*
+@py fetch.py %*
