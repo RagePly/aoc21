@@ -84,11 +84,15 @@ macro_rules! execute_task {
         times.push(post);
         while i < CYCLE_MAX_LOOP && total.as_secs_f32() < CYCLE_MAX_TIME {
             pre = Instant::now();
-            $part($source);
+            let res2 = $part($source);
             post = pre.elapsed();
             total += post;
             times.push(post);
-            i += 1;
+            i += if res2 == res {
+                1
+            } else {
+                panic!()
+            };
         }
         println!("{0:<2$} {1:>3$}µs", 
             res, 
