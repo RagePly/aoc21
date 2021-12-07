@@ -83,3 +83,40 @@ X >= mu : X_high
 => mu^2 (X.len) + mu (2*X_low.len - X.len) + sum(X^2) - 2mu sum(X) + sum(X) - 2 sum(X_low) all divided by 2
 => mu^2 (X.len) + mu (2*X_low.len - X.len) + sum(X^2) + sum(X) (1 - 2mu) - 2 sum(X_low) all divided by 2
 */
+
+/*
+
+With input from reddit solution. Similar part1 performance (85 (mine) vs 81), faster part 2 (85 (mine) vs 63 us)
+
+#[cfg(feature = "day7")]
+pub fn part1(source: String) -> i64 {
+    let mut input: Vec<_> = source.split(",").map(
+        |n| n.parse::<i64>().unwrap()
+    ).collect();
+    let input_slice = input.as_mut_slice();
+    input_slice.sort_unstable();
+    let l = input_slice.len();
+
+    let median = if l % 2 == 0 { (input_slice[l / 2 - 1] + input_slice[l / 2])/2 } else { input_slice[ l / 2] };
+    input_slice.iter().map(
+        |x| (x - median).abs()
+    ).sum()
+}
+
+#[cfg(feature = "day7")]
+pub fn part2(source: String) -> i64 {
+    let mut input: Vec<_> = source.split(",").map(
+        |n| n.parse::<i64>().unwrap()
+    ).collect();
+    let input_slice = input.as_mut_slice();
+    let l = input_slice.len();
+
+    let mean: i64 = input_slice.iter().sum::<i64>() / input_slice.len() as i64;
+    input_slice.iter().map(
+        |x| {
+            let n = (x - mean).abs();
+            n * (n + 1) / 2
+        }
+    ).sum()
+}
+*/
