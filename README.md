@@ -33,6 +33,8 @@ day9:part1:   572                                                               
 day9:part2:   847044                                                            3093±441µs
 day10:part1:  390993                                                              104±38µs
 day10:part2:  2391385187                                                          103±22µs
+day11:part1:  1732                                                                524±86µs
+day11:part2:  290                                                                799±100µs
 ```
 
 ### Compared to cargo's unittesting
