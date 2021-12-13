@@ -17,14 +17,13 @@ pub fn part2(_source: String) -> String {
 use std::collections::HashMap;
 
 #[cfg(feature = "day12")]
-use std::rc::Rc;
+type Uppercases = Vec<bool>;
 
 #[cfg(feature = "day12")]
-type NodeGraph = HashMap<Rc<String>, Vec<Rc<String>>>;
-
+type NodeGraph = Vec<Vec<usize>>;
 
 #[cfg(feature = "day12")]
-type PathStack = Vec<Rc<String>>;
+type PathStack = Vec<bool>;
 
 #[cfg(feature = "day12")]
 #[inline]
@@ -33,24 +32,20 @@ fn is_uppercase(s: &str) -> bool {
 }
 
 #[cfg(feature = "day12")]
-fn dfs(stack: &mut PathStack, graph: &NodeGraph, twice: bool) -> usize {
-    let top = stack.last().unwrap().clone();
-    graph[&top]
+fn dfs(top: usize, stack: &mut PathStack, graph: &NodeGraph, twice: bool, uppercase: &Uppercases, start: usize, end: usize) -> usize {
+    graph[top]
     .iter()
-    .map(|node| if *node.as_ref() == String::from("end") {
+    .map(|&node| if node == end {
             1
-        } else if *node.as_ref() == String::from("start") {
+        } else if node == start {
             0
-        } else if is_uppercase(node) || !stack.contains(node) {
-            stack.push(node.clone());
-            let count = dfs(stack, graph, twice);
-            stack.pop();
+        } else if uppercase[node] || !stack[node] {
+            stack[node] = true;
+            let count = dfs(node, stack, graph, twice, uppercase, start, end);
+            stack[node] = false;
             count
         } else if !twice {
-            stack.push(node.clone());
-            let count = dfs(stack, graph, !twice);
-            stack.pop();
-            count
+            dfs(node, stack, graph, !twice, uppercase, start, end)
         } else {
             0
         }
@@ -61,37 +56,75 @@ fn dfs(stack: &mut PathStack, graph: &NodeGraph, twice: bool) -> usize {
 #[cfg(feature = "day12")]
 pub fn part1(source: String) -> usize {
     let mut graph = NodeGraph::new();
+    let mut index_mapping: HashMap<String, usize> = HashMap::new();
+    let mut uppercase: Uppercases = Uppercases::new();
+    let mut iota = 0;
     source
     .split("\r\n")
     .for_each(
         |line| {
-            let mut nodes = line.split("-");
-            let node1 = Rc::new(String::from(nodes.next().unwrap()));
-            let node2 = Rc::new(String::from(nodes.next().unwrap()));
-            graph.entry(node1.clone()).or_insert(Vec::new()).push(node2.clone());
-            graph.entry(node2).or_insert(Vec::new()).push(node1);
+            let mut is = line
+            .split("-")
+            .map(|node| {
+                match index_mapping.get(node) {
+                    Some(&i) => i,
+                    None => {
+                        uppercase.push(is_uppercase(node));
+                        graph.push(Vec::new());
+                        index_mapping.insert(String::from(node), iota);
+                        iota += 1;
+                        iota - 1
+                    }
+                }
+            });
+
+            let i1 = is.next().unwrap();
+            let i2 = is.next().unwrap();
+            graph[i1].push(i2);
+            graph[i2].push(i1);
         }
     );
-
-    let mut stack = vec!(graph.get_key_value(&String::from("start")).unwrap().0.clone());
-    dfs(&mut stack, &graph, true)
+    
+    let start = index_mapping["start"];
+    let end = index_mapping["end"];
+    let mut stack = (0..graph.len()).map(|_| false).collect();
+    dfs(start, &mut stack, &graph, true, &uppercase, start, end)
 }
 
 #[cfg(feature = "day12")]
 pub fn part2(source: String) -> usize {
     let mut graph = NodeGraph::new();
+    let mut index_mapping: HashMap<String, usize> = HashMap::new();
+    let mut uppercase: Uppercases = Uppercases::new();
+    let mut iota = 0;
     source
     .split("\r\n")
     .for_each(
         |line| {
-            let mut nodes = line.split("-");
-            let node1 = Rc::new(String::from(nodes.next().unwrap()));
-            let node2 = Rc::new(String::from(nodes.next().unwrap()));
-            graph.entry(node1.clone()).or_insert(Vec::new()).push(node2.clone());
-            graph.entry(node2).or_insert(Vec::new()).push(node1);
+            let mut is = line
+            .split("-")
+            .map(|node| {
+                match index_mapping.get(node) {
+                    Some(&i) => i,
+                    None => {
+                        uppercase.push(is_uppercase(node));
+                        graph.push(Vec::new());
+                        index_mapping.insert(String::from(node), iota);
+                        iota += 1;
+                        iota - 1
+                    }
+                }
+            });
+
+            let i1 = is.next().unwrap();
+            let i2 = is.next().unwrap();
+            graph[i1].push(i2);
+            graph[i2].push(i1);
         }
     );
-
-    let mut stack = vec!(graph.get_key_value(&String::from("start")).unwrap().0.clone());
-    dfs(&mut stack, &graph, false)
+    
+    let start = index_mapping["start"];
+    let end = index_mapping["end"];
+    let mut stack = (0..graph.len()).map(|_| false).collect();
+    dfs(start, &mut stack, &graph, false, &uppercase, start, end)
 }
