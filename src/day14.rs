@@ -23,147 +23,64 @@ type Pair = [char; 2];
 type Score = HashMap<char, usize>;
 
 #[cfg(feature = "day14")]
-type ScoreChache = HashMap<Pair, Score>;
+type PairCount = HashMap<Pair, usize>;
 
-#[cfg(feature = "day14")]
-type LevelCache = Vec<ScoreChache>;
 
 #[cfg(feature = "day14")]
 type Insertions = HashMap<Pair, char>;
 
 #[cfg(feature = "day14")]
-fn scoring_recursive(
-    pair: Pair, 
-    insertions: &Insertions,
-    level_cache: &mut LevelCache,
-    depth: usize,
-) {
-    let mut scoring = Score::new();
-    let new = insertions[&pair];
-    scoring.insert(new, 1);
+fn parse(source: String) -> (Vec<char>, Insertions) {
+    let mut parts = source.split("\r\n\r\n");
+    let orig_state: Vec<_> = parts.next().unwrap().chars().collect();
+    let mapping: Insertions = parts
+    .next()
+    .unwrap()
+    .split("\r\n")
+    .map(|line| {
+        let terms: Vec<char> = line.split(" -> ").map(|t| t.chars()).flatten().collect();
+        ([terms[0], terms[1]], terms[2])
+    })
+    .collect();
 
-    if depth != 0 {
-        [[pair[0], new], [new, pair[1]]]
-        .iter()
-        .for_each(|new_pair| {
-            if level_cache.len() <= depth - 1 || !level_cache[depth - 1].contains_key(new_pair) {
-                // is guaranteed to insert new_pair into 
-                scoring_recursive(*new_pair, insertions, level_cache, depth - 1);
-            }
-
-            level_cache[depth - 1][new_pair]
-            .iter()
-            .for_each(|(c, s)| *scoring.entry(*c).or_insert(0) += s);
-        });
-    }
-
-    if level_cache.len() == depth { 
-        let mut score_cache = ScoreChache::new();
-        score_cache.insert(pair, scoring);
-        level_cache.push(score_cache);
-    } else {
-        level_cache[depth].insert(pair, scoring);
-    }
+    (orig_state, mapping)
 }
+
+#[cfg(feature = "day14")]
+fn run(orig_state: Vec<char>, mapping: Insertions, steps: usize) -> usize {
+    let mut score = Score::new();
+    orig_state.iter().for_each(|&c| *score.entry(c).or_insert(0) += 1);
+
+    let mut count = PairCount::new();
+    orig_state.as_slice().windows(2).for_each(|v| *count.entry([v[0], v[1]]).or_insert(0) += 1);
+
+    for _ in 0..steps {
+        let mut new_count = PairCount::new();
+        for (pair, v) in count {
+            let new = mapping[&pair];
+            *score.entry(new).or_insert(0) += v;
+            *new_count.entry([pair[0], new]).or_insert(0) += v;
+            *new_count.entry([new, pair[1]]).or_insert(0) += v;
+        }
+
+        count = new_count;
+    }
+
+    let mut scores: Vec<_> = score.values().collect();
+    scores.sort_unstable();
+    scores[scores.len() -1] - scores[0]
+}
+
 
 #[cfg(feature = "day14")]
 pub fn part1(source: String) -> usize {
-    let mut parts = source.split("\r\n\r\n");
-    let orig_state: Vec<_> = parts.next().unwrap().chars().collect();
-    let mapping: Insertions = parts
-    .next()
-    .unwrap()
-    .split("\r\n")
-    .map(|line| {
-        let mut terms = line.split(" -> ");
-        let mut temp = terms.next().unwrap().chars();
-        let from: Pair = [temp.next().unwrap(), temp.next().unwrap()];
-        let to: char = terms.next().unwrap().chars().next().unwrap();
-        (from, to)
-    })
-    .collect();
-
-    // apply recursive function
-    let mut level_cache = LevelCache::new(); 
-    orig_state
-    .as_slice()
-    .windows(2)
-    .for_each(|v|
-        scoring_recursive([v[0], v[1]], &mapping, &mut level_cache, 9)
-    );
-
-    // add accumulated scores
-    let mut scoring = Score::new();
-    level_cache[9]
-    .iter()
-    .for_each(|(_, scores)| 
-        scores
-        .iter()
-        .for_each(|(c, s)| 
-            *scoring.entry(*c).or_insert(0) += s
-        )
-    );
-
-    // add original letters to score
-    orig_state
-    .iter()
-    .for_each(|&c| 
-        *scoring.entry(c).or_insert(0) += 1
-    );
-
-    // collect scores and sort
-    let mut scores: Vec<_> = scoring.values().map(|&v| v).collect();
-    scores.sort_unstable();
-    scores[scores.len() - 1] - scores[0]
+    let (orig_state, mapping) = parse(source);
+    run(orig_state, mapping, 10)
 }
+
 
 #[cfg(feature = "day14")]
 pub fn part2(source: String) -> usize {
-    let mut parts = source.split("\r\n\r\n");
-    let orig_state: Vec<_> = parts.next().unwrap().chars().collect();
-    let mapping: Insertions = parts
-    .next()
-    .unwrap()
-    .split("\r\n")
-    .map(|line| {
-        let mut terms = line.split(" -> ");
-        let mut temp = terms.next().unwrap().chars();
-        let from: Pair = [temp.next().unwrap(), temp.next().unwrap()];
-        let to: char = terms.next().unwrap().chars().next().unwrap();
-        (from, to)
-    })
-    .collect();
-
-    // apply recursive function
-    let mut level_cache = LevelCache::new(); 
-    orig_state
-    .as_slice()
-    .windows(2)
-    .for_each(|v|
-        scoring_recursive([v[0], v[1]], &mapping, &mut level_cache, 39)
-    );
-
-    // add accumulated scores
-    let mut scoring = Score::new();
-    level_cache[39]
-    .iter()
-    .for_each(|(_, scores)| 
-        scores
-        .iter()
-        .for_each(|(c, s)| 
-            *scoring.entry(*c).or_insert(0) += s
-        )
-    );
-
-    // add original letters to score
-    orig_state
-    .iter()
-    .for_each(|&c| 
-        *scoring.entry(c).or_insert(0) += 1
-    );
-
-    // collect scores and sort
-    let mut scores: Vec<_> = scoring.values().map(|&v| v).collect();
-    scores.sort_unstable();
-    scores[scores.len() - 1] - scores[0]
+    let (orig_state, mapping) = parse(source);
+    run(orig_state, mapping, 40)
 }
